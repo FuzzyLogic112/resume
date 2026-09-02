@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>王文涛 · 云计算 / DevOps / Linux 运维工程师</title>
+<meta name="description" content="王文涛 — 云计算 · DevOps · Linux 运维工程师。阿里云高可用架构、Docker/CI-CD 自动化、AI 智能体工程化与自建 VPN 运维实践。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#080b12; --bg2:#0b1120; --panel:rgba(255,255,255,.03); --panel-brd:rgba(255,255,255,.08);
+  --ink:#e8edf6; --ink-soft:#9aa7bd; --ink-dim:#6b788f;
+  --accent:#4ea1ff; --accent2:#22d3ee; --gold:#e6be7a; --green:#43d69a;
+  --grad:linear-gradient(120deg,#4ea1ff,#22d3ee);
+  --shadow:0 20px 50px -20px rgba(0,0,0,.7);
+  --font:"Inter","Noto Sans SC",system-ui,-apple-system,"Microsoft YaHei",sans-serif;
+  --display:"Space Grotesk","Noto Sans SC",var(--font);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);background:var(--bg);color:var(--ink);
+  line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(900px 600px at 12% -5%,rgba(78,161,255,.16),transparent 60%),
+    radial-gradient(800px 600px at 100% 0%,rgba(34,211,238,.10),transparent 55%),
+    radial-gradient(700px 700px at 50% 120%,rgba(78,161,255,.08),transparent 60%),
+    var(--bg);
+}
+#stars{position:fixed;inset:0;z-index:-1;opacity:.9}
+a{color:inherit;text-decoration:none}
+::selection{background:rgba(78,161,255,.35);color:#fff}
+
+/* scroll progress */
+#prog{position:fixed;top:0;left:0;height:3px;width:0;z-index:100;background:var(--grad);box-shadow:0 0 14px rgba(78,161,255,.7)}
+
+/* nav */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:90;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px clamp(18px,5vw,64px);
+  backdrop-filter:blur(14px);background:rgba(8,11,18,.55);
+  border-bottom:1px solid transparent;transition:.35s;
+}
+nav.scrolled{background:rgba(8,11,18,.82);border-bottom-color:var(--panel-brd)}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--grad);box-shadow:0 0 12px var(--accent)}
+.navlinks{display:flex;gap:28px;font-size:.9rem;color:var(--ink-soft)}
+.navlinks a{position:relative;padding:4px 0;transition:.25s}
+.navlinks a::after{content:"";position:absolute;left:0;bottom:-2px;height:2px;width:0;background:var(--grad);transition:.3s}
+.navlinks a:hover,.navlinks a.active{color:var(--ink)}
+.navlinks a:hover::after,.navlinks a.active::after{width:100%}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+.burger span{width:24px;height:2px;background:var(--ink);border-radius:2px;transition:.3s}
+
+/* layout */
+.wrap{max-width:1120px;margin:0 auto;padding:0 clamp(18px,5vw,40px)}
+section{padding:clamp(64px,9vw,120px) 0;position:relative}
+.eyebrow{font-family:var(--display);font-size:.78rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent2);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--accent2);opacity:.7}
+h2.title{font-family:var(--display);font-size:clamp(1.7rem,4vw,2.6rem);font-weight:700;letter-spacing:-.5px;margin-bottom:10px;line-height:1.15}
+.sub{color:var(--ink-soft);max-width:620px;margin-bottom:44px}
+
+/* HERO */
+#hero{min-height:100svh;display:flex;align-items:center;padding-top:90px}
+.hero-grid{display:grid;grid-template-columns:1.35fr .9fr;gap:clamp(30px,5vw,70px);align-items:center;width:100%}
+.hero-tag{display:inline-flex;align-items:center;gap:9px;font-size:.82rem;color:var(--ink-soft);border:1px solid var(--panel-brd);background:var(--panel);padding:7px 15px;border-radius:100px;margin-bottom:26px}
+.hero-tag .pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(67,214,154,.7);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(67,214,154,.6)}70%{box-shadow:0 0 0 12px rgba(67,214,154,0)}100%{box-shadow:0 0 0 0 rgba(67,214,154,0)}}
+#hero h1{font-family:var(--display);font-size:clamp(2.6rem,7vw,4.6rem);line-height:1.02;font-weight:700;letter-spacing:-1.5px;margin-bottom:8px}
+#hero h1 .en{display:block;font-size:.34em;letter-spacing:5px;color:var(--ink-dim);font-weight:500;margin-top:14px;text-transform:uppercase}
+.role{font-size:clamp(1.05rem,2.4vw,1.5rem);font-weight:600;margin:18px 0 8px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pitch{color:var(--ink-soft);max-width:520px;font-size:1.02rem;margin-bottom:30px}
+.contacts{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+.chip{display:inline-flex;align-items:center;gap:9px;font-size:.88rem;color:var(--ink-soft);background:var(--panel);border:1px solid var(--panel-brd);padding:9px 15px;border-radius:12px;transition:.25s}
+.chip:hover{color:var(--ink);border-color:rgba(78,161,255,.5);transform:translateY(-2px)}
+.chip svg{width:16px;height:16px;stroke:var(--accent2);flex:0 0 auto}
+.cta{display:flex;gap:14px;flex-wrap:wrap}
+.btn{font-family:var(--display);font-weight:600;font-size:.95rem;padding:13px 26px;border-radius:12px;cursor:pointer;transition:.28s;display:inline-flex;align-items:center;gap:9px;border:1px solid transparent}
+.btn.primary{background:var(--grad);color:#04121f;box-shadow:0 12px 30px -10px rgba(78,161,255,.6)}
+.btn.primary:hover{transform:translateY(-3px);box-shadow:0 18px 40px -12px rgba(78,161,255,.8)}
+.btn.ghost{border-color:var(--panel-brd);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-3px)}
+
+/* portrait */
+.portrait-wrap{position:relative;justify-self:center}
+.portrait{
+  width:min(310px,72vw);aspect-ratio:44/56;border-radius:22px;object-fit:cover;object-position:top center;
+  border:1px solid var(--panel-brd);box-shadow:var(--shadow);position:relative;z-index:2;
+  filter:saturate(1.02) contrast(1.02);
+}
+.portrait-wrap::before{content:"";position:absolute;inset:-16px;border-radius:30px;background:var(--grad);opacity:.25;filter:blur(28px);z-index:1}
+.p-badge{position:absolute;z-index:3;background:rgba(10,15,26,.85);backdrop-filter:blur(8px);border:1px solid var(--panel-brd);border-radius:14px;padding:11px 15px;box-shadow:var(--shadow);animation:float 5s ease-in-out infinite}
+.p-badge .k{font-family:var(--display);font-weight:700;font-size:1.15rem;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.p-badge .l{font-size:.68rem;color:var(--ink-soft);letter-spacing:.5px}
+.pb1{top:14px;left:-42px}
+.pb2{bottom:22px;right:-40px;animation-delay:1.5s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:8px}
+.stat{background:var(--panel);border:1px solid var(--panel-brd);border-radius:16px;padding:24px 20px;text-align:center;transition:.3s}
+.stat:hover{transform:translateY(-4px);border-color:rgba(78,161,255,.4)}
+.stat .num{font-family:var(--display);font-size:clamp(1.8rem,4vw,2.5rem);font-weight:700;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1}
+.stat .lbl{color:var(--ink-soft);font-size:.85rem;margin-top:8px}
+
+/* skills */
+.skill-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.skill-card{background:var(--panel);border:1px solid var(--panel-brd);border-radius:18px;padding:28px;transition:.35s;position:relative;overflow:hidden}
+.skill-card::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:.4s}
+.skill-card:hover{transform:translateY(-6px);border-color:rgba(78,161,255,.35);box-shadow:var(--shadow)}
+.skill-card:hover::before{transform:scaleX(1)}
+.sk-ico{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(78,161,255,.18),rgba(34,211,238,.12));border:1px solid var(--panel-brd);margin-bottom:16px}
+.sk-ico svg{width:24px;height:24px;stroke:var(--accent2)}
+.skill-card h3{font-family:var(--display);font-size:1.15rem;margin-bottom:6px}
+.skill-card .kd{color:var(--ink-dim);font-size:.78rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+.bar{margin-bottom:13px}
+.bar .bt{display:flex;justify-content:space-between;font-size:.85rem;color:var(--ink-soft);margin-bottom:6px}
+.bar .track{height:6px;border-radius:6px;background:rgba(255,255,255,.06);overflow:hidden}
+.bar .fill{height:100%;width:0;border-radius:6px;background:var(--grad);transition:width 1.3s cubic-bezier(.16,1,.3,1)}
+.tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
+.tags span{font-size:.75rem;color:var(--ink-soft);background:rgba(255,255,255,.045);border:1px solid var(--panel-brd);padding:4px 10px;border-radius:7px}
+
+/* timeline / projects */
+.tl{position:relative;padding-left:34px}
+.tl::before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--accent),var(--accent2),transparent)}
+.tl-item{position:relative;margin-bottom:26px}
+.tl-item::before{content:"";position:absolute;left:-33px;top:26px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:3px solid var(--accent);box-shadow:0 0 0 4px rgba(78,161,255,.12)}
+.tl-item.hot::before{border-color:var(--gold);box-shadow:0 0 0 4px rgba(230,190,122,.15)}
+.proj{background:var(--panel);border:1px solid var(--panel-brd);border-radius:18px;padding:26px 28px;transition:.35s}
+.proj:hover{transform:translateX(6px);border-color:rgba(78,161,255,.35);box-shadow:var(--shadow)}
+.proj-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.proj h3{font-family:var(--display);font-size:1.25rem}
+.proj .stack{font-size:.82rem;color:var(--accent2);font-weight:500;font-style:italic}
+.newpill{font-size:.68rem;font-weight:700;letter-spacing:1px;color:#1a1206;background:linear-gradient(135deg,var(--gold),#f2d9a8);padding:3px 10px;border-radius:100px;margin-left:8px;vertical-align:middle}
+.proj ul{list-style:none;margin-top:12px;display:grid;gap:9px}
+.proj li{position:relative;padding-left:22px;color:var(--ink-soft);font-size:.94rem}
+.proj li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:2px;background:var(--grad);transform:rotate(45deg)}
+.proj li b{color:var(--ink);font-weight:600}
+
+/* two col (exp + edu) */
+.two{display:grid;grid-template-columns:1.15fr .85fr;gap:26px}
+.card{background:var(--panel);border:1px solid var(--panel-brd);border-radius:18px;padding:28px;transition:.35s}
+.card:hover{border-color:rgba(78,161,255,.3)}
+.job-top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:baseline;margin-bottom:4px}
+.job-top h3{font-family:var(--display);font-size:1.18rem}
+.job-top .co{color:var(--accent2);font-size:.9rem}
+.when{font-size:.82rem;color:var(--ink-dim);font-family:var(--display)}
+.card ul{list-style:none;margin-top:14px;display:grid;gap:9px}
+.card li{position:relative;padding-left:20px;color:var(--ink-soft);font-size:.93rem}
+.card li::before{content:"";position:absolute;left:2px;top:9px;width:6px;height:6px;border-radius:50%;background:var(--accent2)}
+.edu-badge{display:flex;gap:14px;align-items:center;margin-bottom:10px}
+.edu-badge .ring{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(78,161,255,.18),rgba(34,211,238,.1));border:1px solid var(--panel-brd);font-family:var(--display);font-weight:700;color:var(--accent2)}
+
+/* honors */
+.honor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.honor{background:linear-gradient(160deg,rgba(230,190,122,.08),var(--panel));border:1px solid var(--panel-brd);border-radius:18px;padding:26px;transition:.35s;position:relative;overflow:hidden}
+.honor:hover{transform:translateY(-6px);border-color:rgba(230,190,122,.4);box-shadow:var(--shadow)}
+.honor .tier{font-family:var(--display);font-size:.72rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.honor .tier svg{width:16px;height:16px;stroke:var(--gold)}
+.honor p{color:var(--ink-soft);font-size:.92rem}
+.honor p b{color:var(--ink);font-weight:600}
+
+/* footer */
+footer{padding:56px 0 40px;border-top:1px solid var(--panel-brd);text-align:center}
+footer .fb{font-family:var(--display);font-weight:700;font-size:1.3rem;margin-bottom:10px}
+footer .fc{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:18px 0;color:var(--ink-soft);font-size:.9rem}
+footer .fc a:hover{color:var(--accent2)}
+footer small{color:var(--ink-dim);font-size:.8rem}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(30px);transition:.8s cubic-bezier(.16,1,.3,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+
+@media(max-width:880px){
+  .hero-grid{grid-template-columns:1fr;text-align:left}
+  .portrait-wrap{order:-1;margin-bottom:10px}
+  .skill-grid,.honor-grid{grid-template-columns:1fr}
+  .two{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .navlinks{display:none}
+  .navlinks.open{display:flex;position:absolute;top:100%;right:16px;left:16px;flex-direction:column;gap:16px;background:rgba(10,14,22,.97);border:1px solid var(--panel-brd);border-radius:16px;padding:22px}
+  .burger{display:flex}
+  .pb1{left:-18px}.pb2{right:-16px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<canvas id="stars"></canvas>
+
+<nav id="nav">
+  <a href="#hero" class="brand"><span class="dot"></span>WANG&nbsp;WENTAO</a>
+  <div class="navlinks" id="navlinks">
+    <a href="#skills">技能</a>
+    <a href="#projects">项目</a>
+    <a href="#experience">经历</a>
+    <a href="#honors">荣誉</a>
+  </div>
+  <div class="burger" id="burger"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<header id="hero"><div class="wrap"><div class="hero-grid">
+  <div class="hero-left">
+    <div class="hero-tag"><span class="pulse"></span>开放机会 · 云计算 / DevOps / 运维方向</div>
+    <h1>王文涛<span class="en">Wang&nbsp;Wentao</span></h1>
+    <div class="role">云计算 · DevOps · Linux 运维工程师</div>
+    <p class="pitch">从 VPS 采购到 CI/CD 流水线，从高可用架构到 AI 智能体工程化 —— 把重复与复杂交给自动化，用工程手段把系统做稳、做快、做省。</p>
+    <div class="contacts">
+      <a class="chip" href="tel:18273188036"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>18273188036</a>
+      <a class="chip" href="mailto:wangwentao511@163.com"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>wangwentao511@163.com</a>
+      <a class="chip" href="https://github.com/FuzzyLogic112" target="_blank" rel="noopener"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>github.com/FuzzyLogic112</a>
+      <a class="chip" href="https://blog.csdn.net/weixin_73134956" target="_blank" rel="noopener"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>技术博客 · CSDN</a>
+    </div>
+    <div class="cta">
+      <a class="btn primary" href="#projects">查看项目 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      <a class="btn ghost" href="#experience">工作经历</a>
+    </div>
+  </div>
+  <div class="portrait-wrap">
+    <img class="portrait" src="assets/profile.jpg" alt="王文涛 证件照" />
+    <div class="p-badge pb1"><div class="k">3×24</div><div class="l">生产服务器运维</div></div>
+    <div class="p-badge pb2"><div class="k">&lt;2s</div><div class="l">平均响应时间</div></div>
+  </div>
+</div></div></header>
+
+<!-- STATS -->
+<section id="overview" style="padding-top:0">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat reveal"><div class="num" data-to="3" data-suffix="+">0</div><div class="lbl">生产服务器运维</div></div>
+      <div class="stat reveal d1"><div class="num" data-to="6" data-suffix="+">0</div><div class="lbl">端到端项目实践</div></div>
+      <div class="stat reveal d2"><div class="num" data-to="99" data-suffix="%">0</div><div class="lbl">服务可用性目标</div></div>
+      <div class="stat reveal d3"><div class="num" data-to="1" data-prefix="国家级 ">0</div><div class="lbl">创新创业一等奖</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="eyebrow reveal">Core Competencies</div>
+    <h2 class="title reveal">核心技能</h2>
+    <p class="sub reveal">围绕「稳定、自动化、可观测」的运维工程能力，横跨云平台、系统网络与 AI 工程化三大方向。</p>
+    <div class="skill-grid">
+      <div class="skill-card reveal">
+        <div class="sk-ico"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></div>
+        <h3>云原生 &amp; DevOps</h3>
+        <div class="kd">Cloud · CI/CD · Containers</div>
+        <div class="bar"><div class="bt"><span>阿里云 ECS / OSS / SLB / RDS</span><span>90%</span></div><div class="track"><div class="fill" data-w="90"></div></div></div>
+        <div class="bar"><div class="bt"><span>Docker / Compose / K3s</span><span>85%</span></div><div class="track"><div class="fill" data-w="85"></div></div></div>
+        <div class="bar"><div class="bt"><span>Git · GitHub Actions CI/CD</span><span>88%</span></div><div class="track"><div class="fill" data-w="88"></div></div></div>
+        <div class="tags"><span>容器编排</span><span>高可用架构</span><span>自动化部署</span></div>
+      </div>
+      <div class="skill-card reveal d1">
+        <div class="sk-ico"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+        <h3>系统 &amp; 网络</h3>
+        <div class="kd">Linux · Network · Security</div>
+        <div class="bar"><div class="bt"><span>Linux (CentOS / Ubuntu)</span><span>90%</span></div><div class="track"><div class="fill" data-w="90"></div></div></div>
+        <div class="bar"><div class="bt"><span>Nginx 反代 / 负载均衡 / HTTPS</span><span>88%</span></div><div class="track"><div class="fill" data-w="88"></div></div></div>
+        <div class="bar"><div class="bt"><span>Shell / Python 自动化脚本</span><span>82%</span></div><div class="track"><div class="fill" data-w="82"></div></div></div>
+        <div class="tags"><span>TCP/IP</span><span>服务器安全加固</span><span>故障排查</span></div>
+      </div>
+      <div class="skill-card reveal d2">
+        <div class="sk-ico"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/><circle cx="19" cy="5" r="2"/></svg></div>
+        <h3>开发 &amp; AI 工程化</h3>
+        <div class="kd">Full-Stack · LLM · Agents</div>
+        <div class="bar"><div class="bt"><span>Prompt 工程 · Claude Skill</span><span>86%</span></div><div class="track"><div class="fill" data-w="86"></div></div></div>
+        <div class="bar"><div class="bt"><span>AI Agent / 多智能体工作流</span><span>80%</span></div><div class="track"><div class="fill" data-w="80"></div></div></div>
+        <div class="bar"><div class="bt"><span>MySQL 调优 · Python / Java</span><span>75%</span></div><div class="track"><div class="fill" data-w="75"></div></div></div>
+        <div class="tags"><span>Vercel</span><span>Supabase</span><span>Next.js</span><span>大模型工具链</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="wrap">
+    <div class="eyebrow reveal">Selected Work</div>
+    <h2 class="title reveal">项目经验</h2>
+    <p class="sub reveal">从底层运维到上层应用，每个项目都以「可交付、可复现、可运维」为标准落地。</p>
+    <div class="tl">
+      <div class="tl-item hot reveal">
+        <div class="proj">
+          <div class="proj-head"><h3>AI 工程化 &amp; 智能体开发<span class="newpill">NEW</span></h3><span class="stack">Claude · Prompt Engineering · Multi-Agent</span></div>
+          <ul>
+            <li>基于 Claude 自研多个可复用 <b>Skill</b>，将提示词工程沉淀为标准化能力模块，显著提升任务自动化的一致性与复用率。</li>
+            <li>设计结构化提示词流程（角色设定 / 约束边界 / 输出规范），系统性优化大模型输出的质量与稳定性。</li>
+            <li>编排 <b>多智能体（Multi-Agent）工作流</b>，串联检索、代码生成、审查与部署环节，打通「需求 → 交付」的自动化闭环。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item hot reveal">
+        <div class="proj">
+          <div class="proj-head"><h3>自建 VPN / 加密隧道运维<span class="newpill">NEW</span></h3><span class="stack">VPS · Linux · TLS · Nginx</span></div>
+          <ul>
+            <li>自主采购海外 <b>VPS</b>，从零完成系统初始化、内核参数优化与服务部署，搭建稳定低延迟的加密隧道。</li>
+            <li>配置防火墙 / 安全组、密钥登录、端口伪装与 <b>TLS 加密</b>，强化安全防护，抵御端口扫描与暴力破解。</li>
+            <li>编写运维脚本实现服务自启、状态监控与流量管理，保障 <b>7×24 稳定可用</b>。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="proj">
+          <div class="proj-head"><h3>DevOps 自动化部署平台</h3><span class="stack">Docker · GitHub Actions · Nginx</span></div>
+          <ul>
+            <li>基于 <b>Docker Compose</b> 容器化管理多微服务，实现快速部署与运行环境的强隔离。</li>
+            <li>编写 <b>GitHub Actions CI/CD</b> 工作流，代码 Push 后自动触发服务器拉取、构建与部署。</li>
+            <li>以 <b>Nginx 网关</b>作为多项目统一入口，实现 HTTPS 证书自动化，大幅降低人工发布与运维成本。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="proj">
+          <div class="proj-head"><h3>云服务器高可用 Web 架构</h3><span class="stack">阿里云 ECS / OSS / SLB · Linux</span></div>
+          <ul>
+            <li>基于 <b>ECS + OSS</b> 搭建静态资源分离的 Web 架构，配置 <b>SLB 双机负载均衡</b>，保障校园社团网站高可用。</li>
+            <li>严控 Linux 安全组规则（仅开放 80 / 443 端口），深度优化访问链路，平均响应时间稳定控制在 <b>2 秒内</b>。</li>
+          </ul>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="proj">
+          <div class="proj-head"><h3>AI 辅助全栈 Web 应用实践</h3><span class="stack">Next.js · Supabase · Vercel</span></div>
+          <ul>
+            <li>利用现代 AI 编码工具辅助生成前后端业务逻辑，大幅缩短轻量级 Web 应用从 0 到 1 的开发周期。</li>
+            <li>集成 <b>Supabase BaaS</b> 实现用户认证与数据库管理，依托 <b>Vercel</b> 完成全球 CDN 加速与持续自动化部署。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE + EDU -->
+<section id="experience">
+  <div class="wrap">
+    <div class="eyebrow reveal">Experience &amp; Education</div>
+    <h2 class="title reveal">工作与教育经历</h2>
+    <div class="two" style="margin-top:44px">
+      <div class="card reveal">
+        <div class="job-top"><div><h3>系统运维助理</h3><div class="co">南昌飙淡智能技术有限公司</div></div><span class="when">2024.12 – 2025.04</span></div>
+        <ul>
+          <li>运维 3 台生产服务器，配置 <b>Nginx 反向代理</b>实现服务高可用。</li>
+          <li>排查并解决<b>磁盘写满崩溃、MySQL 主从同步延迟</b>等线上故障，保障业务连续性。</li>
+          <li>沉淀标准化运维流程，独立编写《服务器运维手册》。</li>
+        </ul>
+      </div>
+      <div class="card reveal d1">
+        <div class="edu-badge"><div class="ring">CS</div><div><h3 style="font-family:var(--display);font-size:1.1rem">南昌大学科学技术学院</h3><div class="co" style="color:var(--accent2);font-size:.88rem">计算机科学与技术 · 本科</div></div></div>
+        <ul>
+          <li>系统学习数据结构、操作系统、计算机网络与数据库原理。</li>
+          <li>在校期间以工程实践为主线，深耕云计算与 Linux 运维方向。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HONORS -->
+<section id="honors">
+  <div class="wrap">
+    <div class="eyebrow reveal">Awards &amp; Certifications</div>
+    <h2 class="title reveal">荣誉与认证</h2>
+    <p class="sub reveal">竞赛与认证并重，覆盖技术落地能力、云计算与人工智能方向。</p>
+    <div class="honor-grid">
+      <div class="honor reveal">
+        <div class="tier"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z"/></svg>国家级</div>
+        <p><b>全国大学生技术创新创业大赛 · 一等奖</b><br/>以技术落地能力斩获国家级最高奖项。</p>
+      </div>
+      <div class="honor reveal d1">
+        <div class="tier"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>行业认证</div>
+        <p><b>阿里云云计算工程师（ACA）</b><br/><b>人工智能高级训练师（阿里云）</b><br/>华为 ICT 大赛参赛经历。</p>
+      </div>
+      <div class="honor reveal d2">
+        <div class="tier"><svg fill="none" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>院校荣誉</div>
+        <p>学院奖学金 · 超星杯优秀奖<br/>算法 / 传智杯 IT 技能大赛优秀奖。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fb">王文涛 · Wang Wentao</div>
+    <div style="color:var(--ink-soft);font-size:.95rem">云计算 / DevOps / Linux 运维工程师</div>
+    <div class="fc">
+      <a href="tel:18273188036">18273188036</a><span style="color:var(--ink-dim)">·</span>
+      <a href="mailto:wangwentao511@163.com">wangwentao511@163.com</a><span style="color:var(--ink-dim)">·</span>
+      <a href="https://github.com/FuzzyLogic112" target="_blank" rel="noopener">GitHub</a><span style="color:var(--ink-dim)">·</span>
+      <a href="https://blog.csdn.net/weixin_73134956" target="_blank" rel="noopener">CSDN 博客</a>
+    </div>
+    <small>© 2026 王文涛 · 本页面由 HTML/CSS/JS 手工构建并部署于 GitHub Pages</small>
+  </div>
+</footer>
+
+<script>
+// scroll progress + nav
+const nav=document.getElementById('nav'),prog=document.getElementById('prog');
+function onScroll(){
+  const h=document.documentElement,st=h.scrollTop,sh=h.scrollHeight-h.clientHeight;
+  prog.style.width=(st/sh*100)+'%';
+  nav.classList.toggle('scrolled',st>40);
+}
+addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+// burger
+const burger=document.getElementById('burger'),links=document.getElementById('navlinks');
+burger.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+
+// reveal + counters + bars
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');
+    e.target.querySelectorAll?.('.fill').forEach(f=>f.style.width=f.dataset.w+'%');
+    io.unobserve(e.target);}
+})},{threshold:.16});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// number counters
+const cio=new IntersectionObserver((es)=>{es.forEach(e=>{
+  if(!e.isIntersecting)return;const el=e.target,to=+el.dataset.to,pre=el.dataset.prefix||'',suf=el.dataset.suffix||'';
+  let n=0;const step=Math.max(1,to/40);
+  const t=setInterval(()=>{n+=step;if(n>=to){n=to;clearInterval(t);}el.textContent=pre+Math.round(n)+suf;},22);
+  cio.unobserve(el);
+})},{threshold:.5});
+document.querySelectorAll('.num').forEach(el=>cio.observe(el));
+
+// scrollspy
+const secs=[...document.querySelectorAll('section[id],header[id]')];
+const nl=[...document.querySelectorAll('.navlinks a')];
+const spy=new IntersectionObserver((es)=>{es.forEach(e=>{
+  if(e.isIntersecting){const id=e.target.id;nl.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+id));}
+})},{rootMargin:'-45% 0px -50% 0px'});
+secs.forEach(s=>spy.observe(s));
+
+// particle network
+const cv=document.getElementById('stars'),ctx=cv.getContext('2d');let W,H,pts;
+function init(){W=cv.width=innerWidth;H=cv.height=innerHeight;const n=Math.min(70,Math.floor(W*H/22000));
+  pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35}));}
+function draw(){ctx.clearRect(0,0,W,H);
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;
+    ctx.beginPath();ctx.arc(p.x,p.y,1.3,0,7);ctx.fillStyle='rgba(120,180,255,.55)';ctx.fill();}
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+    const a=pts[i],b=pts[j],dx=a.x-b.x,dy=a.y-b.y,d=dx*dx+dy*dy;
+    if(d<14000){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle='rgba(78,161,255,'+(.14*(1-d/14000))+')';ctx.lineWidth=1;ctx.stroke();}}
+  requestAnimationFrame(draw);}
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches){init();draw();addEventListener('resize',init);}
+</script>
+</body>
+</html>
