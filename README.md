@@ -1,3 +1,5 @@
+<img src="assets/profile.jpg" alt="王文涛" width="140" align="right">
+
 # 王文涛 · 个人简历网站 (Personal Resume)
 
 云计算 / DevOps / Linux 运维工程师的动态商务简历，纯 HTML/CSS/JS 手工构建，部署于 GitHub Pages。
